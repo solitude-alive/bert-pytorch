@@ -25,7 +25,7 @@ def train():
     parser.add_argument("-s", "--seq_len", type=int, default=100, help="maximum sequence len")
 
     parser.add_argument("-b", "--batch_size", type=int, default=128, help="number of batch_size")
-    parser.add_argument("-e", "--epochs", type=int, default=10, help="number of epochs")
+    parser.add_argument("-e", "--epochs", type=int, default=100, help="number of epochs")
     parser.add_argument("-w", "--num_workers", type=int, default=4, help="dataloader worker size")
 
     parser.add_argument("--with_cuda", type=bool, default=True, help="training with CUDA: true, or false")
