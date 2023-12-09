@@ -34,7 +34,7 @@ class BERTTrainer:
         :param lr: learning rate of optimizer
         :param betas: Adam optimizer betas
         :param weight_decay: Adam optimizer weight decay param
-        :param with_cuda: traning with cuda
+        :param with_cuda: training with cuda
         :param log_freq: logging frequency of the batch iteration
         """
 
@@ -136,7 +136,7 @@ class BERTTrainer:
                 data_iter.write(str(post_fix))
 
         logger.log("EP%d_%s, avg_loss=" % (epoch, str_code), avg_loss / len(data_iter), "total_acc=",
-              total_correct * 100.0 / total_element)
+                   total_correct * 100.0 / total_element)
 
     def save(self, epoch, file_path="output/bert_trained.model"):
         """
