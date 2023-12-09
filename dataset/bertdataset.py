@@ -5,6 +5,10 @@ import torch
 
 
 class BERTDataset(Dataset):
+    """
+    BERT Dataset
+
+    """
     def __init__(self, corpus_path, vocab, seq_len, encoding="utf-8", corpus_lines=None, on_memory=True):
         self.vocab = vocab
         self.seq_len = seq_len
@@ -42,6 +46,7 @@ class BERTDataset(Dataset):
         t1 = [self.vocab.sos_index] + t1_random + [self.vocab.eos_index]
         t2 = t2_random + [self.vocab.eos_index]
 
+        # add pad token, pad_index is 0, means not to predict
         t1_label = [self.vocab.pad_index] + t1_label + [self.vocab.pad_index]
         t2_label = t2_label + [self.vocab.pad_index]
 
@@ -72,6 +77,16 @@ class BERTDataset(Dataset):
             return t1, self.get_random_line(), 0
 
     def random_word(self, sentence):
+        """
+        Randomly mask words in sentence
+
+        param:
+            sentence: list of int, tokenized sentence
+
+        return:
+            tokens: list of int, tokenized sentence with random masked words
+            output_label: list of int, 1 means to predict, 0 means not to predict
+        """
         tokens = sentence.split()
         output_label = []
 
@@ -92,10 +107,10 @@ class BERTDataset(Dataset):
                 else:
                     tokens[i] = self.vocab.stoi.get(token, self.vocab.unk_index)
 
-                output_label.append(self.vocab[token])
+                output_label.append(self.vocab[token])  # 1 means to predict
             else:
                 tokens[i] = self.vocab.stoi.get(token, self.vocab.unk_index)
-                output_label.append(0)
+                output_label.append(0)  # 0 means not to predict
 
         return tokens, output_label
 
