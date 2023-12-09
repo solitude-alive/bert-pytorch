@@ -401,8 +401,6 @@ def configure(dir_log=None, format_strs=None, comm=None, log_suffix="", file_suf
     If comm is provided, average all numerical stats across that comm
     """
     if dir_log is None:
-        dir_log = os.getenv("OPENAI_LOGDIR")
-    if dir_log is None:
         dir_log = osp.join(
             # os.path.dirname(os.getcwd()),       # get parent directory
             os.getcwd(),                          # get current directory
