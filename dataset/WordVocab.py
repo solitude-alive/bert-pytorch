@@ -1,7 +1,7 @@
 import pickle
 from collections import Counter
 import tqdm
-from vocab import Vocab
+from dataset.vocab import Vocab
 from utils import logger
 
 
@@ -93,6 +93,6 @@ def build():
 
 
 if __name__ == "__main__":
-    logger.configure(dir_log="bert", format_strs=["stdout", "log"], file_suffix=False)
+    logger.configure(dir_log="../log/bert_pre", format_strs=["stdout", "log"])
     logger.log("test")
     build()

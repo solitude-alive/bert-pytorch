@@ -4,7 +4,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader
 
 from model.bert import BERTLM, BERT
-from optim_schedule import ScheduledOptim
+from trainer.optim_schedule import ScheduledOptim
 
 import tqdm
 
