@@ -73,7 +73,7 @@ def build():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--corpus_path", type=str, default="../data/txt/small-117M.test.txt")
+    parser.add_argument("-c", "--corpus_path", type=str, default="../data/txt/wiki.train.txt")
     parser.add_argument("-o", "--output_path", type=str, default="../data/vocab.pkl")
     parser.add_argument("-s", "--vocab_size", type=int, default=None)
     parser.add_argument("-e", "--encoding", type=str, default="utf-8")

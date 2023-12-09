@@ -24,7 +24,7 @@ def train():
     parser.add_argument("-a", "--attn_heads", type=int, default=8, help="number of attention heads")
     parser.add_argument("-s", "--seq_len", type=int, default=100, help="maximum sequence len")
 
-    parser.add_argument("-b", "--batch_size", type=int, default=32, help="number of batch_size")
+    parser.add_argument("-b", "--batch_size", type=int, default=128, help="number of batch_size")
     parser.add_argument("-e", "--epochs", type=int, default=10, help="number of epochs")
     parser.add_argument("-w", "--num_workers", type=int, default=4, help="dataloader worker size")
 
@@ -41,8 +41,8 @@ def train():
 
     args = parser.parse_args()
 
-    args.train_dataset = "data/txt/small-117M.train.txt"
-    args.test_dataset = "data/txt/small-117M.test.txt"
+    args.train_dataset = "data/txt/wiki.train.txt"
+    args.test_dataset = "data/txt/wiki.test.txt"
     args.vocab_path = "data/vocab.pkl"
     args.output_path = logger.get_dir()
 
@@ -74,10 +74,11 @@ def train():
     logger.log("Training Start")
     for epoch in range(args.epochs):
         trainer.train(epoch)
-        trainer.save(epoch, args.output_path)
+        # trainer.save(epoch, args.output_path)
 
         if test_data_loader is not None:
             trainer.test(epoch)
+    trainer.save(args.epochs, args.output_path)
 
 
 if __name__ == '__main__':
