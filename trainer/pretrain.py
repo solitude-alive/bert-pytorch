@@ -25,7 +25,7 @@ class BERTTrainer:
     def __init__(self, bert: BERT, vocab_size: int,
                  train_dataloader: DataLoader, test_dataloader: DataLoader = None,
                  lr: float = 1e-4, betas=(0.9, 0.999), weight_decay: float = 0.01, warmup_steps=10000,
-                 with_cuda: bool = True, cuda_devices=None, log_freq: int = 10):
+                 with_cuda: bool = True, cuda_devices=None, log_freq: int = 1000):
         """
         :param bert: BERT model which you want to train
         :param vocab_size: total word vocab size
@@ -75,9 +75,8 @@ class BERTTrainer:
 
     def iteration(self, epoch, data_loader, train=True):
         """
-        loop over the data_loader for training or testing
-        if on train status, backward operation is activated
-        and also auto save the model every peoch
+        loop over the data_loader for training or testing if on train status,
+        backward operation is activated and also auto save the model every epoch
 
         :param epoch: current epoch index
         :param data_loader: torch.utils.data.DataLoader for iteration
@@ -101,7 +100,7 @@ class BERTTrainer:
             data = {key: value.to(self.device) for key, value in data.items()}
 
             # 1. forward the next_sentence_prediction and masked_lm model
-            next_sent_output, mask_lm_output = self.model.forward(data["bert_input"], data["segment_label"])
+            next_sent_output, mask_lm_output = self.model(data["bert_input"], data["segment_label"])
 
             # 2-1. NLL(negative log likelihood) loss of is_next classification result
             next_loss = self.criterion(next_sent_output, data["is_next"])
@@ -143,7 +142,7 @@ class BERTTrainer:
         Saving the current BERT model on file_path
 
         :param epoch: current epoch number
-        :param file_path: model output path which gonna be file_path+"ep%d" % epoch
+        :param file_path: model output path which should be file_path+"ep%d" % epoch
         :return: final_output_path
         """
         output_path = file_path + ".ep%d" % epoch
