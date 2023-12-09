@@ -5,7 +5,7 @@ from dataset.vocab import Vocab
 from utils import logger
 
 
-# Build Vocab with text file
+# Build Vocab with txt file
 class WordVocab(Vocab):
     """
     Attributes:
@@ -73,8 +73,8 @@ def build():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--corpus_path", type=str, default="sample_txt.txt")
-    parser.add_argument("-o", "--output_path", type=str, default="vocab.pkl")
+    parser.add_argument("-c", "--corpus_path", type=str, default="../data/txt/small-117M.train.txt")
+    parser.add_argument("-o", "--output_path", type=str, default="../data/vocab.pkl")
     parser.add_argument("-s", "--vocab_size", type=int, default=None)
     parser.add_argument("-e", "--encoding", type=str, default="utf-8")
     parser.add_argument("-m", "--min_freq", type=int, default=1)
@@ -94,5 +94,4 @@ def build():
 
 if __name__ == "__main__":
     logger.configure(dir_log="../log/bert_pre", format_strs=["stdout", "log"])
-    logger.log("test")
     build()
