@@ -8,6 +8,8 @@ from trainer.optim_schedule import ScheduledOptim
 
 import tqdm
 
+from utils import logger
+
 
 class BERTTrainer:
     """
@@ -47,7 +49,7 @@ class BERTTrainer:
 
         # Distributed GPU training if CUDA can detect more than 1 GPU
         if with_cuda and torch.cuda.device_count() > 1:
-            print("Using %d GPUS for BERT" % torch.cuda.device_count())
+            logger.log("Using %d GPUS for BERT" % torch.cuda.device_count())
             self.model = nn.DataParallel(self.model, device_ids=cuda_devices)
 
         # Setting the train and test data loader
@@ -63,7 +65,7 @@ class BERTTrainer:
 
         self.log_freq = log_freq
 
-        print("Total Parameters:", sum([p.nelement() for p in self.model.parameters()]))
+        logger.log("Total Parameters:", sum([p.nelement() for p in self.model.parameters()]))
 
     def train(self, epoch):
         self.iteration(epoch, self.train_data)
@@ -133,7 +135,7 @@ class BERTTrainer:
             if i % self.log_freq == 0:
                 data_iter.write(str(post_fix))
 
-        print("EP%d_%s, avg_loss=" % (epoch, str_code), avg_loss / len(data_iter), "total_acc=",
+        logger.log("EP%d_%s, avg_loss=" % (epoch, str_code), avg_loss / len(data_iter), "total_acc=",
               total_correct * 100.0 / total_element)
 
     def save(self, epoch, file_path="output/bert_trained.model"):
@@ -147,5 +149,5 @@ class BERTTrainer:
         output_path = file_path + ".ep%d" % epoch
         torch.save(self.bert.cpu(), output_path)
         self.bert.to(self.device)
-        print("EP:%d Model Saved on:" % epoch, output_path)
+        logger.log("EP:%d Model Saved on:" % epoch, output_path)
         return output_path
