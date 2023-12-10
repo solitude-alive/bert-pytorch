@@ -1,3 +1,4 @@
+import collections
 import pickle
 from collections import Counter
 import tqdm
@@ -16,16 +17,33 @@ class WordVocab(Vocab):
             Value is the token string.
     """
 
-    def __init__(self, texts, max_size=None, min_freq=1):
+    def __init__(self, texts, max_size=None, min_freq=1, vocab_from_file=False, vocab_file=None):
         logger.info("Start building vocab...")
+
         counter = Counter()
+
+        vocab = {}
+
+        if vocab_from_file:
+            assert vocab_file is not None
+            index = 0
+            with open(vocab_file, "rb") as f:
+                for line in f.readlines():
+                    word = line.decode("utf-8").strip()
+                    vocab[word] = index
+                    index += 1
+
         for line in tqdm.tqdm(texts):
             if isinstance(line, list):
                 words = line
             else:
                 words = line.replace("\n", "").replace("\t", "").split()
             for word in words:
-                counter[word] += 1
+                if vocab_from_file:
+                    if word in vocab:
+                        counter[word] += 1
+                else:
+                    counter[word] += 1
         super().__init__(counter, max_size=max_size, min_freq=min_freq)
 
     def to_seq(self, sentence, seq_len, with_eos=False, with_sos=False, with_len=False) -> list:
@@ -81,7 +99,8 @@ def build():
     args = parser.parse_args()
 
     with open(args.corpus_path, "r", encoding=args.encoding) as f:
-        vocab = WordVocab(f, max_size=args.vocab_size, min_freq=args.min_freq)
+        vocab = WordVocab(f, max_size=args.vocab_size, min_freq=args.min_freq, vocab_from_file=True,
+                          vocab_file="vocab.txt")
 
     logger.info("VOCAB SIZE:", len(vocab))
 
