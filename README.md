@@ -25,5 +25,5 @@ Run `main.py`
 
 
 ## Reference
-[[BERT-pytorch]](https://github.com/codertimo/BERT-pytorch) 
+[[BERT-pytorch]](https://github.com/codertimo/BERT-pytorch) \
 [[BERT-Official]](https://github.com/google-research/bert)
