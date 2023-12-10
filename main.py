@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from model.bert import BERT
 from trainer.pretrain import BERTTrainer
 from dataset.bertdataset import BERTDataset
-from dataset.WordVocab import WordVocab
+from dataset import tokenization
 
 
 def train():
@@ -22,7 +22,7 @@ def train():
     parser.add_argument("-hs", "--hidden", type=int, default=256, help="hidden size of transformer model")
     parser.add_argument("-l", "--layers", type=int, default=8, help="number of layers")
     parser.add_argument("-a", "--attn_heads", type=int, default=8, help="number of attention heads")
-    parser.add_argument("-s", "--seq_len", type=int, default=100, help="maximum sequence len")
+    parser.add_argument("-s", "--seq_len", type=int, default=32, help="maximum sequence len")
 
     parser.add_argument("-b", "--batch_size", type=int, default=128, help="number of batch_size")
     parser.add_argument("-e", "--epochs", type=int, default=100, help="number of epochs")
@@ -41,22 +41,22 @@ def train():
 
     args = parser.parse_args()
 
-    args.train_dataset = "data/txt/wiki.train.txt"
-    args.test_dataset = "data/txt/wiki.test.txt"
-    args.vocab_path = "data/vocab.pkl"
+    args.train_dataset = "data/data/wiki.train.raw"
+    args.test_dataset = "data/data/wiki.test.raw"
+    args.vocab_path = "dataset/vocab.txt"
     args.output_path = logger.get_dir()
 
     logger.log("Loading Vocab", args.vocab_path)
-    vocab = WordVocab.load_vocab(args.vocab_path)
+    vocab = tokenization.load_vocab(args.vocab_path)
     logger.log("Vocab Size: ", len(vocab))
 
     logger.log("Loading Train Dataset", args.train_dataset)
-    train_dataset = BERTDataset(args.train_dataset, vocab, seq_len=args.seq_len,
-                                corpus_lines=args.corpus_lines, on_memory=args.on_memory)
+    train_dataset = BERTDataset(args.train_dataset)
+    # train_dataset = BERTDatasetOLD("data/txt/wiki.test.txt", vocab, seq_len=args.seq_len,
+    #                             corpus_lines=args.corpus_lines, on_memory=args.on_memory)
 
     logger.log("Loading Test Dataset", args.test_dataset)
-    test_dataset = BERTDataset(args.test_dataset, vocab, seq_len=args.seq_len, on_memory=args.on_memory) \
-        if args.test_dataset is not None else None
+    test_dataset = BERTDataset(args.test_dataset) if args.test_dataset is not None else None
 
     logger.log("Creating Dataloader")
     train_data_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers)
