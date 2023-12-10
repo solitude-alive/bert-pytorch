@@ -72,11 +72,10 @@ def train():
     logger.log("Training Start")
     for epoch in range(args.epochs):
         trainer.train(epoch)
-        # trainer.save(epoch, args.output_path)
+        trainer.save(epoch, args.output_path)
 
         if test_data_loader is not None:
             trainer.test(epoch)
-    trainer.save(args.epochs, args.output_path)
 
 
 if __name__ == '__main__':
