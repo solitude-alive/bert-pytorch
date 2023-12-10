@@ -23,6 +23,8 @@ import random
 import tokenization
 import glob
 import json
+import os
+import tqdm
 
 import argparse
 
@@ -68,8 +70,8 @@ def write_instance_to_example_files(instances, tokenizer, max_seq_length,
     writer_index = 0
     total_written = 0
     for (inst_index, instance) in enumerate(instances):
-        input_ids = tokenizer.convert_tokens_to_ids(instance.tokens)    # bert input
-        input_mask = [1] * len(input_ids)                               # input mask
+        input_ids = tokenizer.convert_tokens_to_ids(instance.tokens)  # bert input
+        input_mask = [1] * len(input_ids)  # input mask
         segment_ids = list(instance.segment_ids)
         assert len(input_ids) <= max_seq_length
 
@@ -138,17 +140,19 @@ def create_training_instances(input_file, tokenizer, max_seq_length,
     # (2) Blank lines between documents. Document boundaries are needed so
     # that the "next sentence prediction" task doesn't span between documents.
     with open(input_file, "r") as reader:
-        while True:
-            line = tokenization.convert_to_unicode(reader.readline())
-            if not line:
-                break
-            line = line.strip()     # Return a copy of the string S with leading and trailing whitespace removed.
+        lines = reader.readlines()
+        for line in tqdm.tqdm(lines, total=len(lines), bar_format="{l_bar}{r_bar}"):
+            line = tokenization.convert_to_unicode(line)
+
+            line = line.strip()  # Return a copy of the string S with leading and trailing whitespace removed.
 
             # Empty lines are used as document delimiters
             if not line:
-                all_documents.append([])
+                continue
             tokens = tokenizer.tokenize(line)
             if tokens:
+                if tokens[0] == "=" and tokens[1] != "=":
+                    all_documents.append([])
                 all_documents[-1].append(tokens)
 
     # Remove empty documents
@@ -157,6 +161,8 @@ def create_training_instances(input_file, tokenizer, max_seq_length,
 
     vocab_words = list(tokenizer.vocab.keys())  # load vocab words
     instances = []
+
+    # # Number of times to duplicate the input data (with different masks)
     for _ in range(dupe_factor):
         for document_index in range(len(all_documents)):
             instances.extend(
@@ -256,14 +262,14 @@ def create_instances_from_document(
                 segment_ids.append(0)
                 for token in tokens_a:
                     tokens.append(token)
-                    segment_ids.append(0)   # 0 means in the token a
+                    segment_ids.append(0)  # 0 means in the token a
 
                 tokens.append("[SEP]")
                 segment_ids.append(0)
 
                 for token in tokens_b:
                     tokens.append(token)
-                    segment_ids.append(1)   # 1 means in the token b
+                    segment_ids.append(1)  # 1 means in the token b
                 tokens.append("[SEP]")
                 segment_ids.append(1)
 
@@ -382,31 +388,30 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens, rng):
             trunc_tokens.pop()
 
 
-def main():
+def main(input_file, output_file):
     # load the tokenizer with the vocab_file
     tokenizer = tokenization.FullTokenizer(
         vocab_file=args.vocab_file, do_lower_case=args.do_lower_case)
 
-    logger.info(f"*** Reading from input files {args.input_file} ***")
+    logger.info(f"*** Reading from input files {input_file} ***")
     # create instances
     rng = random.Random(args.random_seed)
     instances = create_training_instances(
-        args.input_file, tokenizer, args.max_seq_length, args.dupe_factor,
+        input_file, tokenizer, args.max_seq_length, args.dupe_factor,
         args.short_seq_prob, args.masked_lm_prob, args.max_predictions_per_seq,
         rng)
 
-    output_files = args.output_file
-    logger.info(f"*** Writing to output files {args.output_file} ***")
+    logger.info(f"*** Writing to output files {output_file} ***")
     # write the instance to example file
     write_instance_to_example_files(instances, tokenizer, args.max_seq_length,
-                                    args.max_predictions_per_seq, output_files)
+                                    args.max_predictions_per_seq, output_file)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert TensorFlow flags to PyTorch args.")
-    parser.add_argument("--input_file", default="../data/wikitext-2-raw/wiki.test.raw", type=str,
+    parser.add_argument("--input_file", default="../data/wikitext-103-raw/wiki.train.raw", type=str,
                         help="Input raw text file (or comma-separated list of files).")
-    parser.add_argument("--output_file", default="../data/test.jsonl", type=str,
+    parser.add_argument("--output_file", default="../data/train.jsonl", type=str,
                         help="Output TF example file (or comma-separated list of files).")
     parser.add_argument("--vocab_file", default="vocab.txt", type=str,
                         help="The vocabulary file that the BERT model was trained on.")
@@ -414,7 +419,7 @@ if __name__ == "__main__":
                         help="Whether to lower case the input text. Should be True for uncased models and False for cased models.")
     parser.add_argument("--do_whole_word_mask", action="store_true",
                         help="Whether to use whole word masking rather than per-WordPiece masking.")
-    parser.add_argument("--max_seq_length", default=32, type=int, help="Maximum sequence length.")
+    parser.add_argument("--max_seq_length", default=128, type=int, help="Maximum sequence length.")
     parser.add_argument("--max_predictions_per_seq", default=20, type=int,
                         help="Maximum number of masked LM predictions per sequence.")
     parser.add_argument("--random_seed", default=12345, type=int, help="Random seed for data generation.")
@@ -427,4 +432,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logger.configure(dir_log="../log/bert_pre", format_strs=["stdout", "log"])
-    main()
+
+    data_folder = "../data/wikitext-103-raw"
+    out_folder = "../data/data/"
+
+    for file in os.listdir(data_folder):
+        file_in = os.path.join(data_folder, file)
+        file_out = os.path.join(out_folder, file)
+        main(file_in, file_out)
