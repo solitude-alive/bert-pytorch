@@ -103,9 +103,10 @@ class BERTTrainer:
             next_sent_output, mask_lm_output = self.model(data["bert_input"], data["segment_label"])
 
             # 2-1. NLL(negative log likelihood) loss of is_next classification result
-            next_loss = self.criterion(next_sent_output, data["is_next"])
+            next_loss = self.criterion(next_sent_output, data["is_next"].squeeze(-1))
 
             # 2-2. NLLLoss of predicting masked token word
+            mask_lm_output = mask_lm_output * data["mask_weights"].unsqueeze(-1)
             mask_loss = self.criterion(mask_lm_output.transpose(1, 2), data["bert_label"])
 
             # 2-3. Adding next_loss and mask_loss : 3.4 Pre-training Procedure
@@ -118,7 +119,7 @@ class BERTTrainer:
                 self.optim_schedule.step_and_update_lr()
 
             # next sentence prediction accuracy
-            correct = next_sent_output.argmax(dim=-1).eq(data["is_next"]).sum().item()
+            correct = next_sent_output.argmax(dim=-1).eq(data["is_next"].squeeze(-1)).sum().item()
             avg_loss += loss.item()
             total_correct += correct
             total_element += data["is_next"].nelement()
