@@ -302,7 +302,7 @@ def create_masked_lm_predictions(tokens, masked_lm_prob,
     for (i, token) in enumerate(tokens):
         if token == "[CLS]" or token == "[SEP]":
             continue
-        # Whole Word Masking means that if we mask all of the wordpieces
+        # Whole Word Masking means that if we mask all the wordpieces
         # corresponding to an original word. When a word has been split into
         # WordPieces, the first token does not have any marker and any subsequence
         # tokens are prefixed with ##. So whenever we see the ## token, we
@@ -390,8 +390,7 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens, rng):
 
 def main(input_file, output_file):
     # load the tokenizer with the vocab_file
-    tokenizer = tokenization.FullTokenizer(
-        vocab_file=args.vocab_file, do_lower_case=args.do_lower_case)
+    tokenizer = tokenization.FullTokenizer(vocab_file=args.vocab_file, do_lower_case=args.do_lower_case)
 
     logger.info(f"*** Reading from input files {input_file} ***")
     # create instances
@@ -416,7 +415,8 @@ if __name__ == "__main__":
     parser.add_argument("--vocab_file", default="vocab.txt", type=str,
                         help="The vocabulary file that the BERT model was trained on.")
     parser.add_argument("--do_lower_case", action="store_true",
-                        help="Whether to lower case the input text. Should be True for uncased models and False for cased models.")
+                        help="Whether to lower case the input text. Should be True for uncased models and False for "
+                             "cased models.")
     parser.add_argument("--do_whole_word_mask", action="store_true",
                         help="Whether to use whole word masking rather than per-WordPiece masking.")
     parser.add_argument("--max_seq_length", default=128, type=int, help="Maximum sequence length.")
