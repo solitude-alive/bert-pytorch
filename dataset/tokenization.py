@@ -69,6 +69,17 @@ class FullTokenizer(object):
         return convert_by_vocab(self.inv_vocab, ids)
 
 
+def printable_text(text):
+    """Returns text encoded in a way suitable for print or `tf.logging`."""
+
+    # These functions want `str` for both Python2 and Python3, but in one case
+    # it's a Unicode string and in the other it's a byte string.
+    if isinstance(text, str):
+        return text
+    elif isinstance(text, bytes):
+        return text.decode("utf-8", "ignore")
+
+
 def whitespace_tokenize(text):
     """ Runs basic whitespace cleaning and splitting on a piece of text."""
     text = text.strip()
@@ -196,7 +207,7 @@ class BasicTokenizer(object):
 class WordpieceTokenizer(object):
     """ Runs WordPiece tokenziation."""
 
-    def __init__(self, vocab, unk_token="<unk>", max_input_chars_per_word=200):
+    def __init__(self, vocab, unk_token="[UNK]", max_input_chars_per_word=200):
         self.vocab = vocab
         self.unk_token = unk_token
         self.max_input_chars_per_word = max_input_chars_per_word
