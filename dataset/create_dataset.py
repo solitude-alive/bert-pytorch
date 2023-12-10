@@ -105,14 +105,14 @@ def write_instance_to_example_files(instances, tokenizer, max_seq_length,
         next_sentence_label = 1 if instance.is_random_next else 0
 
         features = collections.OrderedDict()
-        features["bert_input"] = input_ids
-        features["input_mask"] = input_mask
-        features["segment_ids"] = segment_ids
-        features["masked_lm_positions"] = masked_lm_positions
-        features["masked_lm_ids"] = masked_lm_ids
-        features["masked_lm_weights"] = masked_lm_weights
-        features["masked_labels"] = masked_labels
-        features["next_sentence_labels"] = [next_sentence_label]
+        features["bert_input"] = input_ids                      # Bert input token (int)
+        features["input_mask"] = input_mask                     # 1 means in the token, 0 means padding
+        features["segment_ids"] = segment_ids         # 0 means in the token_a, 1 means in the token_b, 0 means padding
+        features["masked_lm_positions"] = masked_lm_positions   # the position of the masked token
+        features["masked_lm_ids"] = masked_lm_ids               # the id of the masked token
+        features["masked_lm_weights"] = masked_lm_weights       # 1 means the masked token, 0 means the other token
+        features["masked_labels"] = masked_labels               # the id of the masked token
+        features["next_sentence_labels"] = [next_sentence_label]  # 1 means next sentence, 0 means other sentence
 
         # convert it to json
         json_str = json.dumps(features, separators=(',', ':'))
@@ -194,7 +194,7 @@ def create_instances_from_document(
     if rng.random() < short_seq_prob:
         target_seq_length = rng.randint(2, max_num_tokens)
 
-    # We DON'T just concatenate all of the tokens from a document into a long
+    # We DON'T just concatenate all the tokens from a document into a long
     # sequence and choose an arbitrary split point because this would make the
     # next sentence prediction task too easy. Instead, we split the input into
     # segments "A" and "B" based on the actual "sentences" provided by the user
