@@ -423,7 +423,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_predictions_per_seq", default=20, type=int,
                         help="Maximum number of masked LM predictions per sequence.")
     parser.add_argument("--random_seed", default=12345, type=int, help="Random seed for data generation.")
-    parser.add_argument("--dupe_factor", default=1, type=int,
+    parser.add_argument("--dupe_factor", default=5, type=int,
                         help="Number of times to duplicate the input data (with different masks).")
     parser.add_argument("--masked_lm_prob", default=0.15, type=float, help="Masked LM probability.")
     parser.add_argument("--short_seq_prob", default=0.1, type=float,
