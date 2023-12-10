@@ -22,10 +22,10 @@ def train():
     parser.add_argument("-hs", "--hidden", type=int, default=256, help="hidden size of transformer model")
     parser.add_argument("-l", "--layers", type=int, default=8, help="number of layers")
     parser.add_argument("-a", "--attn_heads", type=int, default=8, help="number of attention heads")
-    parser.add_argument("-s", "--seq_len", type=int, default=32, help="maximum sequence len")
+    parser.add_argument("-s", "--seq_len", type=int, default=128, help="maximum sequence len")
 
-    parser.add_argument("-b", "--batch_size", type=int, default=128, help="number of batch_size")
-    parser.add_argument("-e", "--epochs", type=int, default=100, help="number of epochs")
+    parser.add_argument("-b", "--batch_size", type=int, default=32, help="number of batch_size")
+    parser.add_argument("-e", "--epochs", type=int, default=20, help="number of epochs")
     parser.add_argument("-w", "--num_workers", type=int, default=4, help="dataloader worker size")
 
     parser.add_argument("--with_cuda", type=bool, default=True, help="training with CUDA: true, or false")
@@ -52,8 +52,6 @@ def train():
 
     logger.log("Loading Train Dataset", args.train_dataset)
     train_dataset = BERTDataset(args.train_dataset)
-    # train_dataset = BERTDatasetOLD("data/txt/wiki.test.txt", vocab, seq_len=args.seq_len,
-    #                             corpus_lines=args.corpus_lines, on_memory=args.on_memory)
 
     logger.log("Loading Test Dataset", args.test_dataset)
     test_dataset = BERTDataset(args.test_dataset) if args.test_dataset is not None else None
