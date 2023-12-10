@@ -29,12 +29,12 @@ def train():
     parser.add_argument("-w", "--num_workers", type=int, default=4, help="dataloader worker size")
 
     parser.add_argument("--with_cuda", type=bool, default=True, help="training with CUDA: true, or false")
-    parser.add_argument("--log_freq", type=int, default=100, help="printing loss every n iter: setting n")
+    parser.add_argument("--log_freq", type=int, default=1000, help="printing loss every n iter: setting n")
     parser.add_argument("--corpus_lines", type=int, default=None, help="total number of lines in corpus")
     parser.add_argument("--cuda_devices", type=int, nargs='+', default=None, help="CUDA device ids")
     parser.add_argument("--on_memory", type=bool, default=True, help="Loading on memory: true or false")
 
-    parser.add_argument("--lr", type=float, default=1e-3, help="learning rate of adam")
+    parser.add_argument("--lr", type=float, default=5e-5, help="learning rate of adam")
     parser.add_argument("--adam_weight_decay", type=float, default=0.01, help="weight_decay of adam")
     parser.add_argument("--adam_beta1", type=float, default=0.9, help="adam first beta value")
     parser.add_argument("--adam_beta2", type=float, default=0.999, help="adam first beta value")
