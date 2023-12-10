@@ -64,8 +64,12 @@ def gen_wiki():
                             continue
                         text = line
                         text = " ".join(tk.tokenize(text))    # tokenize the text
+
                         # insert the \t in the middle of the text
-                        text = text[: len(text) // 2] + "\t" + text[len(text) // 2:]
+                        text_list = text.split()
+                        text_t = text_list[: len(text_list) // 2] + ['\t'] + text_list[len(text_list) // 2:]
+                        text = " ".join(text_t)
+
                         ft.write(text + "\n")
 
 
