@@ -15,7 +15,7 @@ i am about to s ##cre ##am ma ##dly in the office / especially \t when they brin
 You can download the raw dataset from [Wiki Dataset](https://blog.salesforceairesearch.com/the-wikitext-long-term-dependency-language-modeling-dataset/) and put it under directory `data`. \
 Then run `dataset/gen_data.py` to generate the dataset data, or you can use your own dataset.
 
-> The `[tokenization.py](dataset/tokenization.py)` is referenced from [BERT-Official](https://github.com/google-research/bert/tokenization.py)
+> The `tokenization.py` is referenced from [BERT-Official](https://github.com/google-research/bert/tokenization.py)
 
 ## 3. Generate the vocab file
 Run `dataset/WordVocab.py`
