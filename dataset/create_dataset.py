@@ -420,7 +420,7 @@ if __name__ == "__main__":
                              "cased models.")
     parser.add_argument("--do_whole_word_mask", action="store_true",
                         help="Whether to use whole word masking rather than per-WordPiece masking.")
-    parser.add_argument("--max_seq_length", default=1024, type=int, help="Maximum sequence length.")
+    parser.add_argument("--max_seq_length", default=256, type=int, help="Maximum sequence length.")
     parser.add_argument("--max_predictions_per_seq", default=20, type=int,
                         help="Maximum number of masked LM predictions per sequence.")
     parser.add_argument("--random_seed", default=12345, type=int, help="Random seed for data generation.")
