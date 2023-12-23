@@ -18,7 +18,7 @@ Then run `dataset/create_dataset.py` to generate the dataset data, or you can us
 > The `tokenization.py` is referenced from [BERT-Official](https://github.com/google-research/bert/tokenization.py)
 
 ## 3. Generate the vocab file
-Run `dataset/WordVocab.py`
+Run `dataset/create_dataset.py`
 
 ## 4. Pretrain your BERT
 Run `main.py`
