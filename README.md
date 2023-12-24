@@ -24,10 +24,15 @@ Run `dataset/create_dataset.py`
 Run `main.py`
 
 ## RESULT
+
 |       | Loss  | Accuracy |
 |:-----:|:-----:|:--------:|
 | Train | 7.846 |  82.318  |
 | Test  | 7.866 |  80.426  |
+
+## Contributing
+
+If you can have better results on this dataset, welcome to open an issue.
 
 
 ## Reference
