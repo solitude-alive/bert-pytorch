@@ -23,6 +23,12 @@ Run `dataset/create_dataset.py`
 ## 4. Pretrain your BERT
 Run `main.py`
 
+## RESULT
+|       | Loss  | Accuracy |
+|:-----:|:-----:|:--------:|
+| Train | 7.846 |  82.318  |
+| Test  | 7.866 |  80.426  |
+
 
 ## Reference
 [[BERT-pytorch]](https://github.com/codertimo/BERT-pytorch) \
