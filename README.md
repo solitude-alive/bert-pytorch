@@ -30,7 +30,7 @@ Run `main.py`
 | Test  | 7.866 |  80.426  |
 
 ## Contributing
-If you can have better results on this dataset, welcome to open an issue.
+If you can have better results on this dataset or any question, welcome to open an issue.
 
 
 ## Reference
