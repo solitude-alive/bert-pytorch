@@ -20,8 +20,8 @@ def train():
     parser.add_argument("-o", "--output_path", type=str, help="output bert.model")
 
     parser.add_argument("-hs", "--hidden", type=int, default=1024, help="hidden size of transformer model")
-    parser.add_argument("-l", "--layers", type=int, default=8, help="number of layers")
-    parser.add_argument("-a", "--attn_heads", type=int, default=8, help="number of attention heads")
+    parser.add_argument("-l", "--layers", type=int, default=12, help="number of layers")
+    parser.add_argument("-a", "--attn_heads", type=int, default=16, help="number of attention heads")
     parser.add_argument("-s", "--seq_len", type=int, default=128, help="maximum sequence len")
 
     parser.add_argument("-b", "--batch_size", type=int, default=32, help="number of batch_size")

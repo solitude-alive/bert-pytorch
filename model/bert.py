@@ -9,7 +9,7 @@ class BERT(nn.Module):
     BERT model : Bidirectional Encoder Representations from Transformers.
     """
 
-    def __init__(self, vocab_size, hidden=1024, n_layers=16, attn_heads=16, dropout=0.1):
+    def __init__(self, vocab_size, hidden=1024, n_layers=24, attn_heads=16, dropout=0.1):
         """
         :param vocab_size: vocab_size of total words
         :param hidden: BERT model hidden size
